@@ -1,4 +1,3 @@
-setwd("F:/mehdi-ada")
 library(GenomicFeatures)
 library(biomaRt)
 library(ChIPseeker)
@@ -14,11 +13,12 @@ library(ReactomePA)
 library(DOSE)
 library(meshes)
 
-
+#import the annotation from biomart
 txdb<-makeTxDbFromBiomart(biomart ="fungi_mart" ,dataset="spombe_eg_gene" ,host="fungi.ensembl.org")
 columns(txdb)
 keytypes(txdb)
 
+#importing the files from the directoy
 samplefiles <- list.files(".", pattern= ".bed", full.names=T)
 samplefiles <- as.list(samplefiles)
 print(samplefiles)
@@ -30,8 +30,6 @@ covplot(peak, weightCol="V5")
 
 promoter <- getPromoters(TxDb=txdb, upstream=3000, downstream=3000)
 tagMatrix <- getTagMatrix(peak, windows=promoter)
-#data("tagMatrixList")
-#tagMatrix <- tagMatrixList[[4]]
 tagHeatmap(tagMatrix, xlim=c(-3000, 3000), color="red")
 peakHeatmap(samplefiles[[2]], TxDb=txdb, upstream=3000, downstream=3000, color="red")
 
@@ -107,23 +105,3 @@ plotDistToTSS(peakAnnoList)
 
 genes= lapply(peakAnnoList, function(i) as.data.frame(i)$geneId)
 vennplot(genes)
-
-getGEOspecies()
-getGEOgenomeVersion()
-
-#txdb1 <- makeTranscriptDbFromGTF("Schizosaccharomyces_pombe.ASM294v2.22.gtf", format="gtf")
-#??makeTranscriptDbFromGFF
-#link <- "ftp://ftp.ensemblgenomes.org/pub/release-34/fungi/gff3/schizosaccharomyces_pombe/Schizosaccharomyces_pombe.ASM294v2.34.gff3.gz" 
-#txdb <- makeTxDbFromGFF(link, format = "gff3", organism = "Schizosaccharomyces pombe", taxonomyId = "4896")
-#txdb <- makeTxDbFromGFF(file = "data/tair10.gff", format = "gff", dataSource = "TAIR", organism = "Arabidopsis thaliana")
-#files <- list.files(path="./", pattern="*!!.narrowPeak$")
-#files <- files[1:13]
-#files
-#peakAnnoList <- lapply(samplefiles, annotatePeak, TxDb=txdb,tssRegion=c(-1000, 1000), verbose=FALSE)
-#peak <- readPeakFile("C2_peaks.narrowPeak", header=FALSE)
-#peakAnno <- annotatePeak(C2_peaks.sorted.narrowPeak, tssRegion = c(-500, 2000), TxDb=txdb)
-#print(peakAnno)
-#write.table(peakAnno, paste("annot_", i, sep="") , sep="\t", col.names=T, row.names = F, quote=F)
-#peakAnnoList <- lapply(C1.df, annotatePeak, TxDb=txdb, verbose=FALSE)
-#keytypes(txdb)
-#?annotatePeak
